@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <jdbc>
+        <driver>org.postgresql.Driver</driver>
+        <url>jdbc:postgresql://localhost:5432/db_service</url>
+        <user>boomzin</user>
+        <password>boomzin</password>
+    </jdbc>
+
+    <generator>
+        <name>org.jooq.codegen.JavaGenerator</name>
+        <database>
+            <name>org.jooq.meta.postgres.PostgresDatabase</name>
+            <inputSchema>db_service</inputSchema>
+            <includes>.*</includes>
+            <recordVersionFields>VERSION</recordVersionFields>
+            <includeExcludeColumns>true</includeExcludeColumns>
+            <excludes>flyway_schema_history</excludes>
+            <outputSchemaToDefault>true</outputSchemaToDefault>
+            <includeForeignKeys>true</includeForeignKeys>
+            <views>true</views>
+        </database>
+        <generate>
+            <relations>true</relations>
+            <deprecated>false</deprecated>
+            <generatedAnnotation>true</generatedAnnotation>
+            <records>true</records>
+            <pojos>true</pojos>
+            <immutablePojos>false</immutablePojos>
+            <interfaces>true</interfaces>
+            <daos>false</daos>
+            <jpaAnnotations>false</jpaAnnotations>
+            <validationAnnotations>false</validationAnnotations>
+            <globalObjectReferences>true</globalObjectReferences>
+            <fluentSetters>false</fluentSetters>
+        </generate>
+        <target>
+            <packageName>ru.mediatel.icc.dbservice.db.generated</packageName>
+            <directory>./src/main/java</directory>
+        </target>
+    </generator>
+</configuration>
