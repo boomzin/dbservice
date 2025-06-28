@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_DB: db_service
+      POSTGRES_USER: boomzin
+      POSTGRES_PASSWORD: boomzin
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./docker/pgdata:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  flyway:
+    container_name: flyway
+    build:
+      context: ./
+      dockerfile: ./docker/flyway/Dockerfile
+    environment:
+      - TZ=Europe/Moscow
+    volumes:
+      - ./db/migration/:/flyway/sql:ro
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+
+  app:
+    build:
+      context: .
+      dockerfile: ./docker/app/Dockerfile
+    container_name: db-service-app
+    restart: always
+    environment:
+      SPRING_CONFIG_LOCATION: "file:/config/application.yaml"
+    depends_on:
+      - postgres
+      - flyway
+    ports:
+      - "8090:8090"
+    volumes:
+      - ./docker/app/application.yaml:/config/application.yaml:ro
+      - ./docker/app/start.sh:/app/start.sh:ro
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  pgdata:

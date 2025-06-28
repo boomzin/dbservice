@@ -1,0 +1,13 @@
+server:
+  port: 8090
+spring:
+  application:
+    name: db-service
+  datasource:
+    url: jdbc:postgresql://postgres:5432/db_service
+    username: boomzin
+    password: boomzin
+    driver-class-name: org.postgresql.Driver
+    maximumPoolSize: 20
+    minimumIdle: 1
+    idleTimeout: 60000
