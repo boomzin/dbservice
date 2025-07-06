@@ -1,8 +1,10 @@
+server:
+  port: 8090
 spring:
   application:
     name: db-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/db_service
+    jdbcUrl: jdbc:postgresql://localhost:5432/db_service
     username: boomzin
     password: boomzin
     driver-class-name: org.postgresql.Driver
