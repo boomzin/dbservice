@@ -16,24 +16,24 @@ public class ClaimService {
         this.repository = repository;
     }
 
-    public Claim findById(UUID climId) {
-        return repository.findById(climId);
+    public Claim findById(UUID claimId) {
+        return repository.findById(claimId);
     }
 
     public PagedResult<Claim> search(Map<String, String> apiParams) {
         return repository.search(apiParams);
     }
 
-    public void update(Claim product) {
-        repository.update(product);
+    public void update(Claim claim) {
+        repository.update(claim);
     }
 
-    public void create(Claim product) {
-        repository.create(product);
+    public void create(Claim claim) {
+        repository.create(claim);
     }
 
-    public void delete(UUID productId) {
-        repository.delete(productId);
+    public void delete(UUID claimId) {
+        repository.delete(claimId);
     }
 
 }

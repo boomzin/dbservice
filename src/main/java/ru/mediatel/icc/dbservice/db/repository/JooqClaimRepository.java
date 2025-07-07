@@ -76,12 +76,12 @@ public class JooqClaimRepository implements ClaimRepository {
     }
 
     @Override
-    public Claim findById(UUID productIs) {
+    public Claim findById(UUID claimId) {
         return db
                 .selectFrom(CLAIMS)
-                .where(CLAIMS.ID.eq(productIs))
+                .where(CLAIMS.ID.eq(claimId))
                 .fetchOptional(mapper)
-                .orElseThrow(() -> new ObjectNotFoundException(productIs, "Claim"));
+                .orElseThrow(() -> new ObjectNotFoundException(claimId, "Claim"));
     }
 
 
@@ -102,9 +102,9 @@ public class JooqClaimRepository implements ClaimRepository {
     }
 
     @Override
-    public void delete(UUID productId) {
+    public void delete(UUID claimId) {
         db.deleteFrom(CLAIMS)
-                .where(CLAIMS.ID.eq(productId))
+                .where(CLAIMS.ID.eq(claimId))
                 .execute();
     }
 

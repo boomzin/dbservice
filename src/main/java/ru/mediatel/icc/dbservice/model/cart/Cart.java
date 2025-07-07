@@ -1,0 +1,36 @@
+package ru.mediatel.icc.dbservice.model.cart;
+
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import ru.mediatel.icc.dbservice.common.UuidEntity;
+import ru.mediatel.icc.dbservice.db.generated.enums.CartStatus;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+@EqualsAndHashCode(callSuper = true)
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class Cart extends UuidEntity {
+    private UUID userId;
+    private CartStatus status;
+    @JsonFormat(pattern="dd-MM-yyyy HH:mm:ss")
+    private LocalDateTime createdAt;
+    @JsonFormat(pattern="dd-MM-yyyy HH:mm:ss")
+    private LocalDateTime updatedAt;
+    private String customerComment;
+
+    public Cart(UUID id, UUID userId, CartStatus status, LocalDateTime createdAt, LocalDateTime updatedAt, String customerComment) {
+        super(id);
+        this.userId = userId;
+        this.status = status;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.customerComment = customerComment;
+    }
+}
