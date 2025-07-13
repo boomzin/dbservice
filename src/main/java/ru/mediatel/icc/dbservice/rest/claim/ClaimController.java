@@ -40,6 +40,7 @@ public class ClaimController {
     @GetMapping()
     public PagedDataApiResponse<ClaimDto> list(
 
+            @RequestParam(name = "order_id", required = false) String orderId,
             @RequestParam(name = "status", required = false) String status,
             @RequestParam(name = "created_at", required = false) String createdAt,
             @RequestParam(name = "created_at_from", required = false) String createdAtFrom,
@@ -56,6 +57,7 @@ public class ClaimController {
 
         PagedResult<Claim> cmdItems = claimService.search(new HashMap<>() {{
 
+            put("order_id", orderId);
             put("status", status);
             put("created_at", createdAt);
             put("created_at_from", createdAtFrom);

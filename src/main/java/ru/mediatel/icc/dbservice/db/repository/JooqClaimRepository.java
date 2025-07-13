@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static ru.mediatel.icc.dbservice.common.search.JooqSearchUtils.STR_LIKE_IC;
+import static ru.mediatel.icc.dbservice.common.search.JooqSearchUtils.UUID_EQ;
 import static ru.mediatel.icc.dbservice.db.generated.Tables.CLAIMS;
 
 
@@ -40,6 +41,7 @@ public class JooqClaimRepository implements ClaimRepository {
     public JooqClaimRepository(DSLContext db) {
         this.db = db;
         this.criteriaSettings = SearchCriteriaSettings.builder()
+                .filter("order_id", CLAIMS.ORDER_ID, UUID_EQ)
                 .filter("status", CLAIMS.STATUS, (f, v) -> f.eq(ClaimStatus.valueOf(v)))
                 .filter("created_at", CLAIMS.CREATED_AT, (f, v) -> f.eq(LocalDateTime.parse(v)))
                 .filter("created_at_from", CLAIMS.CREATED_AT, (f, v) -> f.ge(LocalDateTime.parse(v)))

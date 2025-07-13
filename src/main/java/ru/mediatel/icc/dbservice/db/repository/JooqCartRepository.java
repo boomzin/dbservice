@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static ru.mediatel.icc.dbservice.common.search.JooqSearchUtils.STR_LIKE_IC;
+import static ru.mediatel.icc.dbservice.common.search.JooqSearchUtils.UUID_EQ;
 import static ru.mediatel.icc.dbservice.db.generated.Tables.CARTS;
 
 
@@ -40,6 +41,7 @@ public class JooqCartRepository implements CartRepository {
     public JooqCartRepository(DSLContext db) {
         this.db = db;
         this.criteriaSettings = SearchCriteriaSettings.builder()
+                .filter("user_id", CARTS.USER_ID, UUID_EQ)
                 .filter("status", CARTS.STATUS, (f, v) -> f.eq(CartStatus.valueOf(v)))
                 .filter("created_at", CARTS.CREATED_AT, (f, v) -> f.eq(LocalDateTime.parse(v)))
                 .filter("created_at_from", CARTS.CREATED_AT, (f, v) -> f.ge(LocalDateTime.parse(v)))
