@@ -1,4 +1,4 @@
-package ru.mediatel.icc.dbservice.rest.interaction;
+package ru.mediatel.icc.dbservice.rest.order;
 
 
 import jakarta.validation.Valid;
@@ -16,8 +16,8 @@ import ru.mediatel.icc.dbservice.common.data.PagedResult;
 import ru.mediatel.icc.dbservice.common.response.DataApiResponse;
 import ru.mediatel.icc.dbservice.common.response.PagedDataApiResponse;
 import ru.mediatel.icc.dbservice.common.response.StatusApiResponse;
-import ru.mediatel.icc.dbservice.model.interaction.Interaction;
-import ru.mediatel.icc.dbservice.model.interaction.InteractionService;
+import ru.mediatel.icc.dbservice.model.order.Order;
+import ru.mediatel.icc.dbservice.model.order.OrderService;
 
 import java.util.HashMap;
 import java.util.List;
@@ -28,20 +28,20 @@ import static ru.mediatel.icc.dbservice.common.Constants.BASIC_PATH_V1;
 
 
 @RestController
-@RequestMapping(BASIC_PATH_V1 + "/interactions")
-public class InteractionController {
-    private final InteractionService interactionService;
+@RequestMapping(BASIC_PATH_V1 + "/orders")
+public class OrderController {
+    private final OrderService orderService;
 
 
-    public InteractionController(InteractionService interactionService) {
-        this.interactionService = interactionService;
+    public OrderController(OrderService orderService) {
+        this.orderService = orderService;
     }
 
     @GetMapping()
-    public PagedDataApiResponse<InteractionDto> list(
+    public PagedDataApiResponse<OrderDto> list(
 
+            @RequestParam(name = "user_id", required = false) String userId,
             @RequestParam(name = "cart_id", required = false) String cartId,
-            @RequestParam(name = "order_id", required = false) String orderId,
             @RequestParam(name = "status", required = false) String status,
             @RequestParam(name = "created_at", required = false) String createdAt,
             @RequestParam(name = "created_at_from", required = false) String createdAtFrom,
@@ -56,10 +56,10 @@ public class InteractionController {
             @RequestParam(name = "order", required = false, defaultValue = "") String orders
     ) {
 
-        PagedResult<Interaction> cmdItems = interactionService.search(new HashMap<>() {{
+        PagedResult<Order> cmdItems = orderService.search(new HashMap<>() {{
 
+            put("user_id", userId);
             put("cart_id", cartId);
-            put("order_id", orderId);
             put("status", status);
             put("created_at", createdAt);
             put("created_at_from", createdAtFrom);
@@ -75,29 +75,29 @@ public class InteractionController {
         }});
 
 
-        List<InteractionDto> dtoList = cmdItems.getItems().stream()
-                .map(InteractionDto::new)
+        List<OrderDto> dtoList = cmdItems.getItems().stream()
+                .map(OrderDto::new)
                 .collect(Collectors.toList());
 
         return new PagedDataApiResponse<>(dtoList, cmdItems.getItemsCount(), cmdItems.getOffset(), cmdItems.getLimit());
     }
 
     @GetMapping(value = "/{id}")
-    public DataApiResponse<InteractionDto> getById(
+    public DataApiResponse<OrderDto> getById(
             @PathVariable("id") UUID id
     ) {
-        return new DataApiResponse<>(new InteractionDto(interactionService.findById(id)));
+        return new DataApiResponse<>(new OrderDto(orderService.findById(id)));
     }
 
     @PostMapping()
     public StatusApiResponse create(
-            @RequestBody @Valid InteractionDto dto
+            @RequestBody @Valid OrderDto dto
     ) {
-        interactionService.create(
-                new Interaction(
+        orderService.create(
+                new Order(
                         UUID.randomUUID(),
+                        dto.getUserId(),
                         dto.getCartId(),
-                        dto.getOrderId(),
                         dto.getStatus(),
                         dto.getCreated(),
                         dto.getUpdated(),
@@ -111,13 +111,13 @@ public class InteractionController {
     @PutMapping(value = "/{id}")
     public StatusApiResponse update(
             @PathVariable UUID id,
-            @RequestBody @Valid InteractionDto dto
+            @RequestBody @Valid OrderDto dto
     ) {
-        interactionService.update(
-                new Interaction(
+        orderService.update(
+                new Order(
                         id,
+                        dto.getUserId(),
                         dto.getCartId(),
-                        dto.getOrderId(),
                         dto.getStatus(),
                         dto.getCreated(),
                         dto.getUpdated(),
@@ -132,7 +132,7 @@ public class InteractionController {
     public StatusApiResponse delete(
             @PathVariable("id") UUID id
     ) {
-        interactionService.delete(id);
+        orderService.delete(id);
 
         return new StatusApiResponse(HttpStatus.OK.value(), true);
     }
