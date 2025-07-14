@@ -11,6 +11,7 @@ import java.util.UUID;
 
 import javax.annotation.processing.Generated;
 
+import org.jooq.Check;
 import org.jooq.Condition;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
@@ -29,6 +30,7 @@ import org.jooq.TableField;
 import org.jooq.TableOptions;
 import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
+import org.jooq.impl.Internal;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
 
@@ -75,7 +77,7 @@ public class Users extends TableImpl<UsersRecord> {
     /**
      * The column <code>users.phone</code>.
      */
-    public final TableField<UsersRecord, Integer> PHONE = createField(DSL.name("phone"), SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<UsersRecord, String> PHONE = createField(DSL.name("phone"), SQLDataType.VARCHAR(20).nullable(false), this, "");
 
     /**
      * The column <code>users.email</code>.
@@ -198,6 +200,13 @@ public class Users extends TableImpl<UsersRecord> {
             _orders = new OrdersPath(this, null, Keys.ORDERS__ORDERS_USER_ID_FKEY.getInverseKey());
 
         return _orders;
+    }
+
+    @Override
+    public List<Check<UsersRecord>> getChecks() {
+        return Arrays.asList(
+            Internal.createCheck(this, DSL.name("chk_phone_format"), "(((phone)::text ~ '^\\+?\\d{10,15}$'::text))", true)
+        );
     }
 
     @Override

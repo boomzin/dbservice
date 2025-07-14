@@ -50,7 +50,7 @@ public class UsersRecord extends UpdatableRecordImpl<UsersRecord> implements IUs
      * Setter for <code>users.phone</code>.
      */
     @Override
-    public void setPhone(Integer value) {
+    public void setPhone(String value) {
         set(1, value);
     }
 
@@ -58,8 +58,8 @@ public class UsersRecord extends UpdatableRecordImpl<UsersRecord> implements IUs
      * Getter for <code>users.phone</code>.
      */
     @Override
-    public Integer getPhone() {
-        return (Integer) get(1);
+    public String getPhone() {
+        return (String) get(1);
     }
 
     /**
@@ -153,7 +153,7 @@ public class UsersRecord extends UpdatableRecordImpl<UsersRecord> implements IUs
     /**
      * Create a detached, initialised UsersRecord
      */
-    public UsersRecord(UUID id, Integer phone, String email, String tg, String description) {
+    public UsersRecord(UUID id, String phone, String email, String tg, String description) {
         super(Users.USERS);
 
         setId(id);

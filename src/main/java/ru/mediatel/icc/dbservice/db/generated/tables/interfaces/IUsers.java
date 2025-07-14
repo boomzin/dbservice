@@ -36,12 +36,12 @@ public interface IUsers extends Serializable {
     /**
      * Setter for <code>users.phone</code>.
      */
-    public void setPhone(Integer value);
+    public void setPhone(String value);
 
     /**
      * Getter for <code>users.phone</code>.
      */
-    public Integer getPhone();
+    public String getPhone();
 
     /**
      * Setter for <code>users.email</code>.

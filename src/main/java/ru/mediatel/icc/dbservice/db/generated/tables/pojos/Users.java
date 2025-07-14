@@ -27,7 +27,7 @@ public class Users implements IUsers {
     private static final long serialVersionUID = 1L;
 
     private UUID id;
-    private Integer phone;
+    private String phone;
     private String email;
     private String tg;
     private String description;
@@ -44,7 +44,7 @@ public class Users implements IUsers {
 
     public Users(
         UUID id,
-        Integer phone,
+        String phone,
         String email,
         String tg,
         String description
@@ -76,7 +76,7 @@ public class Users implements IUsers {
      * Getter for <code>users.phone</code>.
      */
     @Override
-    public Integer getPhone() {
+    public String getPhone() {
         return this.phone;
     }
 
@@ -84,7 +84,7 @@ public class Users implements IUsers {
      * Setter for <code>users.phone</code>.
      */
     @Override
-    public void setPhone(Integer phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 
