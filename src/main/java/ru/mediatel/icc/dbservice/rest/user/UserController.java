@@ -30,11 +30,11 @@ import static ru.mediatel.icc.dbservice.common.Constants.BASIC_PATH_V1;
 @RestController
 @RequestMapping(BASIC_PATH_V1 + "/users")
 public class UserController {
-    private final UserService subscriptionService;
+    private final UserService service;
 
 
-    public UserController(UserService subscriptionService) {
-        this.subscriptionService = subscriptionService;
+    public UserController(UserService service) {
+        this.service = service;
     }
 
     @GetMapping()
@@ -50,7 +50,7 @@ public class UserController {
             @RequestParam(name = "order", required = false, defaultValue = "") String orders
     ) {
 
-        PagedResult<User> cmdItems = subscriptionService.search(new HashMap<>() {{
+        PagedResult<User> cmdItems = service.search(new HashMap<>() {{
 
             put("phone", phone);
             put("email", email);
@@ -74,14 +74,14 @@ public class UserController {
     public DataApiResponse<UserDto> getById(
             @PathVariable("id") UUID id
     ) {
-        return new DataApiResponse<>(new UserDto(subscriptionService.findById(id)));
+        return new DataApiResponse<>(new UserDto(service.findById(id)));
     }
 
     @PostMapping()
     public StatusApiResponse create(
             @RequestBody @Valid UserDto dto
     ) {
-        subscriptionService.create(
+        service.create(
                 new User(
                         UUID.randomUUID(),
                         dto.getEmail(),
@@ -99,7 +99,7 @@ public class UserController {
             @PathVariable UUID id,
             @RequestBody @Valid UserDto dto
     ) {
-        subscriptionService.update(
+        service.update(
                 new User(
                         id,
                         dto.getPhone(),
@@ -116,7 +116,7 @@ public class UserController {
     public StatusApiResponse delete(
             @PathVariable("id") UUID id
     ) {
-        subscriptionService.delete(id);
+        service.delete(id);
 
         return new StatusApiResponse(HttpStatus.OK.value(), true);
     }

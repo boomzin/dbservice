@@ -12,7 +12,10 @@ import ru.mediatel.icc.dbservice.db.generated.enums.CartStatus;
 import ru.mediatel.icc.dbservice.db.generated.tables.records.CartsRecord;
 import ru.mediatel.icc.dbservice.model.cart.Cart;
 import ru.mediatel.icc.dbservice.model.cart.CartRepository;
+import ru.mediatel.icc.dbservice.rest.cart.CartDetailsDto;
+import ru.mediatel.icc.dbservice.rest.cart.ProductInCartDto;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +23,7 @@ import java.util.UUID;
 
 import static ru.mediatel.icc.dbservice.common.search.JooqSearchUtils.STR_LIKE_IC;
 import static ru.mediatel.icc.dbservice.common.search.JooqSearchUtils.UUID_EQ;
-import static ru.mediatel.icc.dbservice.db.generated.Tables.CARTS;
+import static ru.mediatel.icc.dbservice.db.generated.Tables.*;
 
 
 @Repository
@@ -117,5 +120,51 @@ public class JooqCartRepository implements CartRepository {
         record.setCreatedAt(cart.getCreatedAt());
         record.setUpdatedAt(cart.getUpdatedAt());
         record.setCustomerComment(cart.getCustomerComment());
+    }
+
+    @Override
+    public CartDetailsDto getCartDetails(UUID cartId) {
+        CartsRecord cart = db.selectFrom(CARTS)
+                .where(CARTS.ID.eq(cartId))
+                .fetchOptional()
+                .orElseThrow(() -> new ObjectNotFoundException(cartId, "Cart"));
+
+        List<ProductInCartDto> items = db
+                .select(
+                        PRODUCTS.ID,
+                        PRODUCTS.DESCRIPTION,
+                        PRODUCTS.PRICE,
+                        PRODUCTS_IN_CARTS.QUANTITY
+                )
+                .from(PRODUCTS_IN_CARTS)
+                .join(PRODUCTS).on(PRODUCTS.ID.eq(PRODUCTS_IN_CARTS.PRODUCT_ID))
+                .where(PRODUCTS_IN_CARTS.CART_ID.eq(cartId))
+                .fetch()
+                .map(record -> {
+                    BigDecimal price = record.get(PRODUCTS.PRICE);
+                    int quantity = record.get(PRODUCTS_IN_CARTS.QUANTITY);
+                    return new ProductInCartDto(
+                            record.get(PRODUCTS.ID),
+                            record.get(PRODUCTS.DESCRIPTION),
+                            price,
+                            quantity,
+                            price.multiply(BigDecimal.valueOf(quantity))
+                    );
+                });
+
+        BigDecimal total = items.stream()
+                .map(ProductInCartDto::subtotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        return new CartDetailsDto(
+                cart.getId(),
+                cart.getUserId(),
+                cart.getCreatedAt(),
+                cart.getUpdatedAt(),
+                cart.getStatus().name(),
+                cart.getCustomerComment(),
+                items,
+                total
+        );
     }
 }

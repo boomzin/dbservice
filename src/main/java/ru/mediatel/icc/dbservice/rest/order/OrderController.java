@@ -30,11 +30,11 @@ import static ru.mediatel.icc.dbservice.common.Constants.BASIC_PATH_V1;
 @RestController
 @RequestMapping(BASIC_PATH_V1 + "/orders")
 public class OrderController {
-    private final OrderService orderService;
+    private final OrderService service;
 
 
-    public OrderController(OrderService orderService) {
-        this.orderService = orderService;
+    public OrderController(OrderService service) {
+        this.service = service;
     }
 
     @GetMapping()
@@ -56,7 +56,7 @@ public class OrderController {
             @RequestParam(name = "order", required = false, defaultValue = "") String orders
     ) {
 
-        PagedResult<Order> cmdItems = orderService.search(new HashMap<>() {{
+        PagedResult<Order> cmdItems = service.search(new HashMap<>() {{
 
             put("user_id", userId);
             put("cart_id", cartId);
@@ -86,14 +86,14 @@ public class OrderController {
     public DataApiResponse<OrderDto> getById(
             @PathVariable("id") UUID id
     ) {
-        return new DataApiResponse<>(new OrderDto(orderService.findById(id)));
+        return new DataApiResponse<>(new OrderDto(service.findById(id)));
     }
 
     @PostMapping()
     public StatusApiResponse create(
             @RequestBody @Valid OrderDto dto
     ) {
-        orderService.create(
+        service.create(
                 new Order(
                         UUID.randomUUID(),
                         dto.getUserId(),
@@ -113,7 +113,7 @@ public class OrderController {
             @PathVariable UUID id,
             @RequestBody @Valid OrderDto dto
     ) {
-        orderService.update(
+        service.update(
                 new Order(
                         id,
                         dto.getUserId(),
@@ -132,7 +132,7 @@ public class OrderController {
     public StatusApiResponse delete(
             @PathVariable("id") UUID id
     ) {
-        orderService.delete(id);
+        service.delete(id);
 
         return new StatusApiResponse(HttpStatus.OK.value(), true);
     }

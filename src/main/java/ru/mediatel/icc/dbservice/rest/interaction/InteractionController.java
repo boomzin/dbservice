@@ -30,11 +30,11 @@ import static ru.mediatel.icc.dbservice.common.Constants.BASIC_PATH_V1;
 @RestController
 @RequestMapping(BASIC_PATH_V1 + "/interactions")
 public class InteractionController {
-    private final InteractionService interactionService;
+    private final InteractionService service;
 
 
-    public InteractionController(InteractionService interactionService) {
-        this.interactionService = interactionService;
+    public InteractionController(InteractionService service) {
+        this.service = service;
     }
 
     @GetMapping()
@@ -56,7 +56,7 @@ public class InteractionController {
             @RequestParam(name = "order", required = false, defaultValue = "") String orders
     ) {
 
-        PagedResult<Interaction> cmdItems = interactionService.search(new HashMap<>() {{
+        PagedResult<Interaction> cmdItems = service.search(new HashMap<>() {{
 
             put("cart_id", cartId);
             put("order_id", orderId);
@@ -86,14 +86,14 @@ public class InteractionController {
     public DataApiResponse<InteractionDto> getById(
             @PathVariable("id") UUID id
     ) {
-        return new DataApiResponse<>(new InteractionDto(interactionService.findById(id)));
+        return new DataApiResponse<>(new InteractionDto(service.findById(id)));
     }
 
     @PostMapping()
     public StatusApiResponse create(
             @RequestBody @Valid InteractionDto dto
     ) {
-        interactionService.create(
+        service.create(
                 new Interaction(
                         UUID.randomUUID(),
                         dto.getCartId(),
@@ -113,7 +113,7 @@ public class InteractionController {
             @PathVariable UUID id,
             @RequestBody @Valid InteractionDto dto
     ) {
-        interactionService.update(
+        service.update(
                 new Interaction(
                         id,
                         dto.getCartId(),
@@ -132,7 +132,7 @@ public class InteractionController {
     public StatusApiResponse delete(
             @PathVariable("id") UUID id
     ) {
-        interactionService.delete(id);
+        service.delete(id);
 
         return new StatusApiResponse(HttpStatus.OK.value(), true);
     }

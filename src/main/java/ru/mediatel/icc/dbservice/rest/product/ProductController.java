@@ -30,11 +30,11 @@ import static ru.mediatel.icc.dbservice.common.Constants.BASIC_PATH_V1;
 @RestController
 @RequestMapping(BASIC_PATH_V1 + "/products")
 public class ProductController {
-    private final ProductService subscriptionService;
+    private final ProductService service;
 
 
-    public ProductController(ProductService subscriptionService) {
-        this.subscriptionService = subscriptionService;
+    public ProductController(ProductService service) {
+        this.service = service;
     }
 
     @GetMapping()
@@ -51,7 +51,7 @@ public class ProductController {
             @RequestParam(name = "order", required = false, defaultValue = "") String orders
     ) {
 
-        PagedResult<Product> cmdItems = subscriptionService.search(new HashMap<>() {{
+        PagedResult<Product> cmdItems = service.search(new HashMap<>() {{
 
             put("quantity_le", quantityLe);
             put("quantity_ge", quantityGe);
@@ -76,14 +76,24 @@ public class ProductController {
     public DataApiResponse<ProductDto> getById(
             @PathVariable("id") UUID id
     ) {
-        return new DataApiResponse<>(new ProductDto(subscriptionService.findById(id)));
+        return new DataApiResponse<>(new ProductDto(service.findById(id)));
+    }
+
+    @GetMapping(value = "/{id}/availableAmount")
+    public DataApiResponse<Integer> availableAmount(@PathVariable("id") UUID id) {
+        return new DataApiResponse<>(service.availableAmount(id));
+    }
+
+    @GetMapping(value = "/{id}/isAvailable")
+    public DataApiResponse<Boolean> isAvailable(@PathVariable("id") UUID id, int requestedQuantity) {
+        return new DataApiResponse<>(service.isAvailable(id, requestedQuantity));
     }
 
     @PostMapping()
     public StatusApiResponse create(
             @RequestBody @Valid ProductDto dto
     ) {
-        subscriptionService.create(
+        service.create(
                 new Product(
                         UUID.randomUUID(),
                         dto.getQuantity(),
@@ -100,7 +110,7 @@ public class ProductController {
             @PathVariable UUID id,
             @RequestBody @Valid ProductDto dto
     ) {
-        subscriptionService.update(
+        service.update(
                 new Product(
                         id,
                         dto.getQuantity(),
@@ -116,7 +126,7 @@ public class ProductController {
     public StatusApiResponse delete(
             @PathVariable("id") UUID id
     ) {
-        subscriptionService.delete(id);
+        service.delete(id);
 
         return new StatusApiResponse(HttpStatus.OK.value(), true);
     }

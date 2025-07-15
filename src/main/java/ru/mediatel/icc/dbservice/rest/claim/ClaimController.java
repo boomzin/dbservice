@@ -30,11 +30,11 @@ import static ru.mediatel.icc.dbservice.common.Constants.BASIC_PATH_V1;
 @RestController
 @RequestMapping(BASIC_PATH_V1 + "/claims")
 public class ClaimController {
-    private final ClaimService claimService;
+    private final ClaimService service;
 
 
-    public ClaimController(ClaimService claimService) {
-        this.claimService = claimService;
+    public ClaimController(ClaimService service) {
+        this.service = service;
     }
 
     @GetMapping()
@@ -55,7 +55,7 @@ public class ClaimController {
             @RequestParam(name = "order", required = false, defaultValue = "") String orders
     ) {
 
-        PagedResult<Claim> cmdItems = claimService.search(new HashMap<>() {{
+        PagedResult<Claim> cmdItems = service.search(new HashMap<>() {{
 
             put("order_id", orderId);
             put("status", status);
@@ -84,14 +84,14 @@ public class ClaimController {
     public DataApiResponse<ClaimDto> getById(
             @PathVariable("id") UUID id
     ) {
-        return new DataApiResponse<>(new ClaimDto(claimService.findById(id)));
+        return new DataApiResponse<>(new ClaimDto(service.findById(id)));
     }
 
     @PostMapping()
     public StatusApiResponse create(
             @RequestBody @Valid ClaimDto dto
     ) {
-        claimService.create(
+        service.create(
                 new Claim(
                         UUID.randomUUID(),
                         dto.getOrderId(),
@@ -110,7 +110,7 @@ public class ClaimController {
             @PathVariable UUID id,
             @RequestBody @Valid ClaimDto dto
     ) {
-        claimService.update(
+        service.update(
                 new Claim(
                         id,
                         dto.getOrderId(),
@@ -128,7 +128,7 @@ public class ClaimController {
     public StatusApiResponse delete(
             @PathVariable("id") UUID id
     ) {
-        claimService.delete(id);
+        service.delete(id);
 
         return new StatusApiResponse(HttpStatus.OK.value(), true);
     }

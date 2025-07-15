@@ -36,4 +36,12 @@ public class ProductService {
         repository.delete(productId);
     }
 
+    public int availableAmount(UUID productId) {
+        return repository.availableAmount(productId);
+    }
+
+    public boolean isAvailable(UUID productId, int requestedQuantity) {
+        return repository.isAvailable(productId, requestedQuantity);
+    }
+
 }

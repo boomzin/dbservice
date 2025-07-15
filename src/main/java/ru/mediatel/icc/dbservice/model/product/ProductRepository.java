@@ -16,4 +16,8 @@ public interface ProductRepository {
     PagedResult<Product> search(Map<String, String> apiParams);
 
     void delete(UUID productId);
+
+    int availableAmount(UUID productId);
+
+    boolean isAvailable(UUID productId, int requestedQuantity);
 }

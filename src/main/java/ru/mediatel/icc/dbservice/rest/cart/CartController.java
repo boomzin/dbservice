@@ -30,11 +30,11 @@ import static ru.mediatel.icc.dbservice.common.Constants.BASIC_PATH_V1;
 @RestController
 @RequestMapping(BASIC_PATH_V1 + "/carts")
 public class CartController {
-    private final CartService cartService;
+    private final CartService service;
 
 
-    public CartController(CartService cartService) {
-        this.cartService = cartService;
+    public CartController(CartService service) {
+        this.service = service;
     }
 
     @GetMapping()
@@ -55,7 +55,7 @@ public class CartController {
             @RequestParam(name = "order", required = false, defaultValue = "") String orders
     ) {
 
-        PagedResult<Cart> cmdItems = cartService.search(new HashMap<>() {{
+        PagedResult<Cart> cmdItems = service.search(new HashMap<>() {{
 
             put("user_id", userId);
             put("status", status);
@@ -84,14 +84,14 @@ public class CartController {
     public DataApiResponse<CartDto> getById(
             @PathVariable("id") UUID id
     ) {
-        return new DataApiResponse<>(new CartDto(cartService.findById(id)));
+        return new DataApiResponse<>(new CartDto(service.findById(id)));
     }
 
     @PostMapping()
     public StatusApiResponse create(
             @RequestBody @Valid CartDto dto
     ) {
-        cartService.create(
+        service.create(
                 new Cart(
                         UUID.randomUUID(),
                         dto.getUserId(),
@@ -110,7 +110,7 @@ public class CartController {
             @PathVariable UUID id,
             @RequestBody @Valid CartDto dto
     ) {
-        cartService.update(
+        service.update(
                 new Cart(
                         id,
                         dto.getUserId(),
@@ -128,7 +128,7 @@ public class CartController {
     public StatusApiResponse delete(
             @PathVariable("id") UUID id
     ) {
-        cartService.delete(id);
+        service.delete(id);
 
         return new StatusApiResponse(HttpStatus.OK.value(), true);
     }

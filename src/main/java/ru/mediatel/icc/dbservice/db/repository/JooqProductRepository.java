@@ -3,6 +3,7 @@ package ru.mediatel.icc.dbservice.db.repository;
 import org.jooq.DSLContext;
 import org.jooq.RecordMapper;
 import org.jooq.SelectWhereStep;
+import org.jooq.impl.DSL;
 import org.springframework.stereotype.Repository;
 import ru.mediatel.icc.dbservice.common.data.PagedResult;
 import ru.mediatel.icc.dbservice.common.exception.ObjectNotFoundException;
@@ -19,6 +20,7 @@ import java.util.UUID;
 
 import static ru.mediatel.icc.dbservice.common.search.JooqSearchUtils.*;
 import static ru.mediatel.icc.dbservice.db.generated.Tables.PRODUCTS;
+import static ru.mediatel.icc.dbservice.db.generated.Tables.PRODUCT_RESERVATIONS;
 
 
 @Repository
@@ -99,6 +101,39 @@ public class JooqProductRepository implements ProductRepository {
         db.deleteFrom(PRODUCTS)
                 .where(PRODUCTS.ID.eq(productId))
                 .execute();
+    }
+
+    @Override
+    public int availableAmount(UUID productId) {
+        ProductsRecord product = db.selectFrom(PRODUCTS)
+                .where(PRODUCTS.ID.eq(productId))
+                .fetchOptional()
+                .orElseThrow(() -> new ObjectNotFoundException(productId, "Product"));
+
+        int reserved = db.select(DSL.coalesce(PRODUCT_RESERVATIONS.RESERVED_QUANTITY, 0))
+                .from(PRODUCT_RESERVATIONS)
+                .where(PRODUCT_RESERVATIONS.PRODUCT_ID.eq(productId))
+                .fetchOptionalInto(Integer.class)
+                .orElse(0);
+
+        return product.getQuantity() - reserved;
+    }
+
+    @Override
+    public boolean isAvailable(UUID productId, int requestedQuantity) {
+        ProductsRecord product = db.selectFrom(PRODUCTS)
+                .where(PRODUCTS.ID.eq(productId))
+                .fetchOptional()
+                .orElseThrow(() -> new ObjectNotFoundException(productId, "Product"));
+
+        int reserved = db.select(DSL.coalesce(PRODUCT_RESERVATIONS.RESERVED_QUANTITY, 0))
+                .from(PRODUCT_RESERVATIONS)
+                .where(PRODUCT_RESERVATIONS.PRODUCT_ID.eq(productId))
+                .fetchOptionalInto(Integer.class)
+                .orElse(0);
+
+        int available = product.getQuantity() - reserved;
+        return available >= requestedQuantity;
     }
 
     private void fillRecord(ProductsRecord record, Product product) {
