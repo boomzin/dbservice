@@ -13,6 +13,6 @@ COPY --from=builder /app/build/libs/dbservice.jar dbservice.jar
 
 ENV SPRING_PROFILES_ACTIVE=prod
 
-EXPOSE 8090
+EXPOSE 8080
 
 ENTRYPOINT ["java", "-jar", "/app/dbservice.jar", "--spring.config.location=file:/config/application.yaml"]
