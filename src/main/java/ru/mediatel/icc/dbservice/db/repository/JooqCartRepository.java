@@ -3,6 +3,7 @@ package ru.mediatel.icc.dbservice.db.repository;
 import org.jooq.DSLContext;
 import org.jooq.RecordMapper;
 import org.jooq.SelectWhereStep;
+import org.jooq.impl.DSL;
 import org.springframework.stereotype.Repository;
 import ru.mediatel.icc.dbservice.common.data.PagedResult;
 import ru.mediatel.icc.dbservice.common.exception.ObjectNotFoundException;
@@ -11,6 +12,7 @@ import ru.mediatel.icc.dbservice.common.search.SearchCriteriaSettings;
 import ru.mediatel.icc.dbservice.db.generated.enums.CartStatus;
 import ru.mediatel.icc.dbservice.db.generated.tables.records.CartsRecord;
 import ru.mediatel.icc.dbservice.model.cart.Cart;
+import ru.mediatel.icc.dbservice.model.cart.CartItemCheck;
 import ru.mediatel.icc.dbservice.model.cart.CartRepository;
 import ru.mediatel.icc.dbservice.rest.cart.CartDetailsDto;
 import ru.mediatel.icc.dbservice.rest.cart.ProductInCartDto;
@@ -166,5 +168,29 @@ public class JooqCartRepository implements CartRepository {
                 items,
                 total
         );
+    }
+
+    @Override
+    public List<CartItemCheck> findCartItemsForValidation(UUID cartId) {
+        return db.select(
+                        PRODUCTS.ID.as("productId"),
+                        PRODUCTS_IN_CARTS.QUANTITY.as("requestedQty"),
+                        PRODUCTS.QUANTITY.as("stockQty"),
+                        DSL.coalesce(PRODUCT_RESERVATIONS.RESERVED_QUANTITY, 0).as("reservedQty")
+                )
+                .from(PRODUCTS_IN_CARTS)
+                .join(PRODUCTS).on(PRODUCTS.ID.eq(PRODUCTS_IN_CARTS.PRODUCT_ID))
+                .leftJoin(PRODUCT_RESERVATIONS).on(PRODUCT_RESERVATIONS.PRODUCT_ID.eq(PRODUCTS.ID))
+                .where(PRODUCTS_IN_CARTS.CART_ID.eq(cartId))
+                .fetchInto(CartItemCheck.class);
+    }
+
+
+    @Override
+    public void setStatus(UUID cartId, CartStatus status) {
+        db.update(CARTS)
+                .set(CARTS.STATUS, status)
+                .where(CARTS.ID.eq(cartId))
+                .execute();
     }
 }

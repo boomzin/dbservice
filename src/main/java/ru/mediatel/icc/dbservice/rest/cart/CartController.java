@@ -16,6 +16,7 @@ import ru.mediatel.icc.dbservice.common.data.PagedResult;
 import ru.mediatel.icc.dbservice.common.response.DataApiResponse;
 import ru.mediatel.icc.dbservice.common.response.PagedDataApiResponse;
 import ru.mediatel.icc.dbservice.common.response.StatusApiResponse;
+import ru.mediatel.icc.dbservice.db.generated.enums.CartStatus;
 import ru.mediatel.icc.dbservice.model.cart.Cart;
 import ru.mediatel.icc.dbservice.model.cart.CartService;
 
@@ -87,6 +88,20 @@ public class CartController {
         return new DataApiResponse<>(new CartDto(service.findById(id)));
     }
 
+    @GetMapping(value = "/{id}/details")
+    public DataApiResponse<CartDetailsDto> getCartDetails(
+            @PathVariable("id") UUID id
+    ) {
+        return new DataApiResponse<>(service.getCartDetails(id));
+    }
+
+    @PostMapping(value = "/{id}/confirm")
+    public DataApiResponse<UUID> confirmCart(
+            @PathVariable("id") UUID id
+    ) {
+        return new DataApiResponse<>(service.confirmCartAndCreateOrder(id));
+    }
+
     @PostMapping()
     public StatusApiResponse create(
             @RequestBody @Valid CartDto dto
@@ -114,7 +129,7 @@ public class CartController {
                 new Cart(
                         id,
                         dto.getUserId(),
-                        dto.getStatus(),
+                        CartStatus.NEW,
                         dto.getCreated(),
                         dto.getUpdated(),
                         dto.getCustomerComment()

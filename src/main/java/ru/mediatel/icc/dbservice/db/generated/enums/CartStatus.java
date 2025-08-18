@@ -28,7 +28,9 @@ public enum CartStatus implements EnumType {
 
     NEW("NEW"),
 
-    CONFIRMED("CONFIRMED");
+    CONFIRMED("CONFIRMED"),
+
+    ARCHIVED("ARCHIVED");
 
     private final String literal;
 

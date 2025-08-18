@@ -73,12 +73,22 @@ public class ProductReservations extends TableImpl<ProductReservationsRecord> {
 
     private ProductReservations(Name alias, Table<ProductReservationsRecord> aliased, Field<?>[] parameters, Condition where) {
         super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.view("""
-        create view "product_reservations" as  SELECT products_in_orders.product_id,
-          sum(products_in_orders.quantity) AS reserved_quantity
-         FROM (products_in_orders
-           JOIN orders ON ((orders.id = products_in_orders.order_id)))
-        WHERE (orders.status = ANY (ARRAY['ACTIVE'::order_status, 'PAID'::order_status]))
-        GROUP BY products_in_orders.product_id;
+        create view "product_reservations" as  SELECT combined.product_id,
+          sum(combined.quantity) AS reserved_quantity
+         FROM ( SELECT pio.product_id,
+                  pio.quantity
+                 FROM (products_in_orders pio
+                   JOIN orders o ON ((o.id = pio.order_id)))
+                WHERE (o.status = ANY (ARRAY['ACTIVE'::order_status, 'PAID'::order_status]))
+              UNION ALL
+               SELECT pic.product_id,
+                  pic.quantity
+                 FROM (products_in_carts pic
+                   JOIN carts c ON ((c.id = pic.cart_id)))
+                WHERE ((c.status = 'CONFIRMED'::cart_status) AND (NOT (EXISTS ( SELECT 1
+                         FROM orders o2
+                        WHERE ((o2.cart_id = c.id) AND (o2.status = ANY (ARRAY['ACTIVE'::order_status, 'PAID'::order_status])))))))) combined
+        GROUP BY combined.product_id;
         """), where);
     }
 

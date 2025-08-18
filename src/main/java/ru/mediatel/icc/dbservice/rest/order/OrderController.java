@@ -89,6 +89,22 @@ public class OrderController {
         return new DataApiResponse<>(new OrderDto(service.findById(id)));
     }
 
+    @PostMapping(value = "/{id}/activate")
+    public StatusApiResponse activateOrder(
+            @PathVariable("id") UUID id
+    ) {
+        service.activateOrder(id);
+        return new StatusApiResponse(HttpStatus.OK.value(), true);
+    }
+
+    @PostMapping(value = "/{id}/done")
+    public StatusApiResponse markAsDone(
+            @PathVariable("id") UUID id
+    ) {
+        service.markAsDone(id);
+        return new StatusApiResponse(HttpStatus.OK.value(), true);
+    }
+
     @PostMapping()
     public StatusApiResponse create(
             @RequestBody @Valid OrderDto dto
