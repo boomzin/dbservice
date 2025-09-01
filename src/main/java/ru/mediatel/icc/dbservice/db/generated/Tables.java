@@ -14,6 +14,7 @@ import ru.mediatel.icc.dbservice.db.generated.tables.ProductReservations;
 import ru.mediatel.icc.dbservice.db.generated.tables.Products;
 import ru.mediatel.icc.dbservice.db.generated.tables.ProductsInCarts;
 import ru.mediatel.icc.dbservice.db.generated.tables.ProductsInOrders;
+import ru.mediatel.icc.dbservice.db.generated.tables.Tools;
 import ru.mediatel.icc.dbservice.db.generated.tables.Users;
 
 
@@ -69,6 +70,11 @@ public class Tables {
      * The table <code>products_in_orders</code>.
      */
     public static final ProductsInOrders PRODUCTS_IN_ORDERS = ProductsInOrders.PRODUCTS_IN_ORDERS;
+
+    /**
+     * The table <code>tools</code>.
+     */
+    public static final Tools TOOLS = Tools.TOOLS;
 
     /**
      * The table <code>users</code>.

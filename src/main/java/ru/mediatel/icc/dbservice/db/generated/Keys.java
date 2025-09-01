@@ -19,6 +19,7 @@ import ru.mediatel.icc.dbservice.db.generated.tables.Orders;
 import ru.mediatel.icc.dbservice.db.generated.tables.Products;
 import ru.mediatel.icc.dbservice.db.generated.tables.ProductsInCarts;
 import ru.mediatel.icc.dbservice.db.generated.tables.ProductsInOrders;
+import ru.mediatel.icc.dbservice.db.generated.tables.Tools;
 import ru.mediatel.icc.dbservice.db.generated.tables.Users;
 import ru.mediatel.icc.dbservice.db.generated.tables.records.CartsRecord;
 import ru.mediatel.icc.dbservice.db.generated.tables.records.ClaimsRecord;
@@ -27,6 +28,7 @@ import ru.mediatel.icc.dbservice.db.generated.tables.records.OrdersRecord;
 import ru.mediatel.icc.dbservice.db.generated.tables.records.ProductsInCartsRecord;
 import ru.mediatel.icc.dbservice.db.generated.tables.records.ProductsInOrdersRecord;
 import ru.mediatel.icc.dbservice.db.generated.tables.records.ProductsRecord;
+import ru.mediatel.icc.dbservice.db.generated.tables.records.ToolsRecord;
 import ru.mediatel.icc.dbservice.db.generated.tables.records.UsersRecord;
 
 
@@ -55,6 +57,7 @@ public class Keys {
     public static final UniqueKey<ProductsRecord> PRODUCTS_PKEY = Internal.createUniqueKey(Products.PRODUCTS, DSL.name("products_pkey"), new TableField[] { Products.PRODUCTS.ID }, true);
     public static final UniqueKey<ProductsInCartsRecord> UNIQUE_CART_PRODUCT = Internal.createUniqueKey(ProductsInCarts.PRODUCTS_IN_CARTS, DSL.name("unique_cart_product"), new TableField[] { ProductsInCarts.PRODUCTS_IN_CARTS.CART_ID, ProductsInCarts.PRODUCTS_IN_CARTS.PRODUCT_ID }, true);
     public static final UniqueKey<ProductsInOrdersRecord> UNIQUE_ORDER_PRODUCT = Internal.createUniqueKey(ProductsInOrders.PRODUCTS_IN_ORDERS, DSL.name("unique_order_product"), new TableField[] { ProductsInOrders.PRODUCTS_IN_ORDERS.ORDER_ID, ProductsInOrders.PRODUCTS_IN_ORDERS.PRODUCT_ID }, true);
+    public static final UniqueKey<ToolsRecord> TOOLS_PKEY = Internal.createUniqueKey(Tools.TOOLS, DSL.name("tools_pkey"), new TableField[] { Tools.TOOLS.ID }, true);
     public static final UniqueKey<UsersRecord> USERS_EMAIL_KEY = Internal.createUniqueKey(Users.USERS, DSL.name("users_email_key"), new TableField[] { Users.USERS.EMAIL }, true);
     public static final UniqueKey<UsersRecord> USERS_PHONE_KEY = Internal.createUniqueKey(Users.USERS, DSL.name("users_phone_key"), new TableField[] { Users.USERS.PHONE }, true);
     public static final UniqueKey<UsersRecord> USERS_PKEY = Internal.createUniqueKey(Users.USERS, DSL.name("users_pkey"), new TableField[] { Users.USERS.ID }, true);

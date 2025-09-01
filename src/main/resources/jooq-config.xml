@@ -19,6 +19,24 @@
             <outputSchemaToDefault>true</outputSchemaToDefault>
             <includeForeignKeys>true</includeForeignKeys>
             <views>true</views>
+
+
+            <customTypes>
+                <customType>
+                    <name>toolDefinition</name>
+                    <type>ru.mediatel.icc.dbservice.model.tool.ToolDefinition</type>
+                    <converter>ru.mediatel.icc.dbservice.db.converters.ToolDefinitionConverter</converter>
+                </customType>
+            </customTypes>
+
+            <forcedTypes>
+                <forcedType>
+                    <name>toolDefinition</name>
+                    <expression>definition</expression>
+                    <types>JSONB</types>
+                </forcedType>
+            </forcedTypes>
+
         </database>
         <generate>
             <relations>true</relations>

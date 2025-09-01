@@ -21,6 +21,7 @@ import ru.mediatel.icc.dbservice.db.generated.tables.ProductReservations;
 import ru.mediatel.icc.dbservice.db.generated.tables.Products;
 import ru.mediatel.icc.dbservice.db.generated.tables.ProductsInCarts;
 import ru.mediatel.icc.dbservice.db.generated.tables.ProductsInOrders;
+import ru.mediatel.icc.dbservice.db.generated.tables.Tools;
 import ru.mediatel.icc.dbservice.db.generated.tables.Users;
 
 
@@ -85,6 +86,11 @@ public class DefaultSchema extends SchemaImpl {
     public final ProductsInOrders PRODUCTS_IN_ORDERS = ProductsInOrders.PRODUCTS_IN_ORDERS;
 
     /**
+     * The table <code>tools</code>.
+     */
+    public final Tools TOOLS = Tools.TOOLS;
+
+    /**
      * The table <code>users</code>.
      */
     public final Users USERS = Users.USERS;
@@ -113,6 +119,7 @@ public class DefaultSchema extends SchemaImpl {
             Products.PRODUCTS,
             ProductsInCarts.PRODUCTS_IN_CARTS,
             ProductsInOrders.PRODUCTS_IN_ORDERS,
+            Tools.TOOLS,
             Users.USERS
         );
     }

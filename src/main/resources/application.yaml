@@ -1,6 +1,15 @@
 server:
-  port: 8090
+  port: 8070
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
 spring:
+  web:
+    encoding:
+      charset: UTF-8
+      force: true
   application:
     name: db-service
   datasource:
