@@ -49,7 +49,7 @@ services:
       - "8090:8080"
     volumes:
       - ./docker/app/application.yaml:/config/application.yaml:ro
-      - ./docker/app/start.sh:/app/start.sh:ro
+#      - ./docker/app/start.sh:/app/start.sh:ro
     networks:
       - app-network
 
