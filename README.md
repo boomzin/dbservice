@@ -44,3 +44,21 @@ docker compose down -v
   sudo rm -rf ./docker/pgdata && \
   mkdir -pv ./docker/pgdata
 ````
+
+### Схема резервирования товара при движении склад-корзина-заказ-покупатель
+
+|  |  | initial state | user put 10 pcs to cart | user confirm this cart | After confirming the cart, an order will be automatically created | user paid this order | manager close order |
+|---|---|---|-------------------------|---|---|---|---|
+| stock |  | 100 | 100                     | 100 | 100 | 100 | 90 |
+| cart status | NEW |  | 10                      |  |  |  |  |
+|  | CONFIRMED |  |                         | 10 |  |  |  |
+|  | ARCHIVED |  |                         |  | 10 | 10 | 10 |
+| order status | ACTIVE |  |                         |  | 10 |  |  |
+|  | PAID |  |                         |  |  | 10 |  |
+|  | DONE |  |                         |  |  |  | 10 |
+|  | EXPIRED |  |                         |  |  |  |  |
+|  | CANCELLED |  |                         |  |  |  |  |
+|  | PENDING |  |                         |  |  |  |  |
+|  | SUSPENDED |  |                         |  |  |  |  |
+| reserved |  | 0 | 0                       | 10 | 10 | 10 | 0 |
+| available |  | 100 | 100                     | 90 | 90 | 90 | 90 |
